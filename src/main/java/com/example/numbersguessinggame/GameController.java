@@ -30,9 +30,29 @@ public class GameController {
 }
 
 
-  @GetMapping("/guess")
+  @GetMapping("/result")
   public  String guess(@RequestParam int guess,Model model){
-    // We will add our logic here
+    Integer number = (Integer) model.getAttribute("number");
+    String message;
+
+    if(guess == number){
+      message="Correct! The number was " + number + ". Start a new game!";
+      initializeNumber(model); // Reset the number for a new game
+    }else if( guess < number){
+      message = "Too low !";
+    }else{
+      message ="Too high !";
+    }
+
+    model.addAttribute("message", message);
+    return "result";
+
   }
 
+
+  @GetMapping("/newgame")
+public  String newGame(Model model){
+    initializeNumber(model); // Explicitly start a new game
+    return "redirect:/";
+  }
 }
